@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#F7F7F2">
+  <title>Désinscription · Punchlines</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Madimi+One&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F7F2;
+      --carte: #FFFFFF;
+      --bord: #E5E0D8;
+      --texte: #323232;
+      --texte-2: #666666;
+      --texte-3: #999999;
+      --lien: #4F8792;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--texte);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .carte {
+      background: var(--carte);
+      border: 1px solid var(--bord);
+      border-radius: 20px;
+      padding: 40px 28px 32px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .logo { width: 56px; height: 56px; border-radius: 14px; margin-bottom: 20px; }
+    h1 {
+      font-family: 'Madimi One', Poppins, sans-serif;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    p { font-size: 16px; line-height: 1.6; color: var(--texte-2); }
+    p + p { margin-top: 6px; }
+    .aide { margin-top: 24px; font-size: 14px; color: var(--texte-3); }
+    .aide a { color: var(--lien); text-decoration: none; font-weight: 500; }
+    [hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <main class="carte">
+    <img class="logo" src="/assets/logo_p.png" alt="Punchlines" width="56" height="56">
+    <h1 id="titre">Désinscription</h1>
+    <p id="message"></p>
+    <p id="complement" hidden></p>
+    <p class="aide" id="aide"></p>
+    <noscript>
+      <p>Si tu as cliqué sur le lien de désinscription d'un de nos emails, c'est pris en compte.
+      Une question : <a href="mailto:support@thepunchlines.app">support@thepunchlines.app</a></p>
+    </noscript>
+  </main>
+
+  <script>
+    (function () {
+      var ADRESSE = 'support@thepunchlines.app';
+
+      var TEXTES = {
+        fr: {
+          titrePage: 'Désinscription · Punchlines',
+          ok: {
+            titre: "C'est fait.",
+            message: "Tu ne recevras plus d'emails de notre part.",
+            complement: "Ça ne change rien dans l'app.",
+            aide: 'Une erreur ? Écris-nous à {adresse}.'
+          },
+          invalide: {
+            titre: 'Lien invalide',
+            message: "Ce lien de désinscription n'est pas reconnu.",
+            aide: "Pour te désinscrire, écris-nous à {adresse} et on s'en occupe."
+          },
+          erreur: {
+            titre: 'Petit souci',
+            message: "La désinscription n'a pas pu se faire. Réessaie le lien de l'email dans quelques minutes.",
+            aide: 'Si ça bloque encore, écris-nous à {adresse}.'
+          }
+        },
+        en: {
+          titrePage: 'Unsubscribe · Punchlines',
+          ok: {
+            titre: 'Done.',
+            message: "You won't get any more emails from us.",
+            complement: "Nothing changes in the app.",
+            aide: 'A mistake? Write to us at {adresse}.'
+          },
+          invalide: {
+            titre: 'Invalid link',
+            message: "We don't recognize this unsubscribe link.",
+            aide: "To unsubscribe, write to us at {adresse} and we'll take care of it."
+          },
+          erreur: {
+            titre: 'Something went wrong',
+            message: "We couldn't unsubscribe you. Try the link in the email again in a few minutes.",
+            aide: 'Still stuck? Write to us at {adresse}.'
+          }
+        }
+      };
+
+      var params = new URLSearchParams(window.location.search);
+
+      var lang = params.get('lang');
+      if (lang !== 'fr' && lang !== 'en') {
+        var langues = navigator.languages || [navigator.language || 'fr'];
+        lang = String(langues[0] || 'fr').toLowerCase().indexOf('fr') === 0 ? 'fr' : 'en';
+      }
+
+      var statut = params.get('statut');
+      if (statut !== 'ok' && statut !== 'erreur') statut = 'invalide';
+
+      var t = TEXTES[lang][statut];
+      document.documentElement.lang = lang;
+      document.title = TEXTES[lang].titrePage;
+      document.getElementById('titre').textContent = t.titre;
+      document.getElementById('message').textContent = t.message;
+
+      if (t.complement) {
+        var complement = document.getElementById('complement');
+        complement.textContent = t.complement;
+        complement.hidden = false;
+      }
+
+      var morceaux = t.aide.split('{adresse}');
+      var aide = document.getElementById('aide');
+      var lien = document.createElement('a');
+      lien.href = 'mailto:' + ADRESSE;
+      lien.textContent = ADRESSE;
+      aide.appendChild(document.createTextNode(morceaux[0]));
+      aide.appendChild(lien);
+      aide.appendChild(document.createTextNode(morceaux[1] || ''));
+    })();
+  </script>
+</body>
+</html>
