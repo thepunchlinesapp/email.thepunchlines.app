@@ -55,6 +55,20 @@
     p + p { margin-top: 6px; }
     .aide { margin-top: 24px; font-size: 14px; color: var(--texte-3); }
     .aide a { color: var(--lien); text-decoration: none; font-weight: 500; }
+    form { margin-top: 24px; }
+    button {
+      font-family: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #FFFFFF;
+      background: var(--lien);
+      border: none;
+      border-radius: 14px;
+      padding: 14px 24px;
+      width: 100%;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.6; cursor: default; }
     [hidden] { display: none; }
   </style>
 </head>
@@ -64,20 +78,37 @@
     <h1 id="titre">Désinscription</h1>
     <p id="message"></p>
     <p id="complement" hidden></p>
+    <form id="formulaire" method="post" hidden>
+      <input type="hidden" name="confirmer" value="1">
+      <button type="submit" id="bouton"></button>
+    </form>
     <p class="aide" id="aide"></p>
     <noscript>
-      <p>Si tu as cliqué sur le lien de désinscription d'un de nos emails, c'est pris en compte.
-      Une question : <a href="mailto:support@thepunchlines.app">support@thepunchlines.app</a></p>
+      <p>Pour te désinscrire, écris-nous à <a href="mailto:support@thepunchlines.app">support@thepunchlines.app</a>
+      et on s'en occupe.</p>
     </noscript>
   </main>
 
   <script>
     (function () {
       var ADRESSE = 'support@thepunchlines.app';
+      // La fonction edge unsubscribe (dépôt JeSuis). Son GET renvoie ici avec
+      // ?token=…&lang=… sans rien changer ; le bouton lui envoie confirmer=1 en
+      // POST, et elle revient ici avec ?statut=ok|invalide|erreur.
+      var FONCTION = 'https://otzvmkhcrnqfmesorcab.supabase.co/functions/v1/unsubscribe';
+      var UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
       var TEXTES = {
         fr: {
           titrePage: 'Désinscription · Punchlines',
+          confirmer: {
+            titre: 'Te désinscrire ?',
+            message: "Tu ne recevras plus d'emails de notre part.",
+            complement: "Ça ne change rien dans l'app.",
+            bouton: 'Me désinscrire',
+            envoi: 'Un instant…',
+            aide: 'Une question ? Écris-nous à {adresse}.'
+          },
           ok: {
             titre: "C'est fait.",
             message: "Tu ne recevras plus d'emails de notre part.",
@@ -97,6 +128,14 @@
         },
         en: {
           titrePage: 'Unsubscribe · Punchlines',
+          confirmer: {
+            titre: 'Unsubscribe?',
+            message: "You won't get any more emails from us.",
+            complement: "Nothing changes in the app.",
+            bouton: 'Unsubscribe me',
+            envoi: 'One moment…',
+            aide: 'A question? Write to us at {adresse}.'
+          },
           ok: {
             titre: 'Done.',
             message: "You won't get any more emails from us.",
@@ -125,7 +164,9 @@
       }
 
       var statut = params.get('statut');
-      if (statut !== 'ok' && statut !== 'erreur') statut = 'invalide';
+      var token = params.get('token');
+      if (!statut && token && UUID.test(token)) statut = 'confirmer';
+      if (statut !== 'confirmer' && statut !== 'ok' && statut !== 'erreur') statut = 'invalide';
 
       var t = TEXTES[lang][statut];
       document.documentElement.lang = lang;
@@ -137,6 +178,23 @@
         var complement = document.getElementById('complement');
         complement.textContent = t.complement;
         complement.hidden = false;
+      }
+
+      if (statut === 'confirmer') {
+        var formulaire = document.getElementById('formulaire');
+        var bouton = document.getElementById('bouton');
+        formulaire.action = FONCTION + '?token=' + encodeURIComponent(token);
+        bouton.textContent = t.bouton;
+        formulaire.hidden = false;
+        formulaire.addEventListener('submit', function () {
+          bouton.disabled = true;
+          bouton.textContent = t.envoi;
+        });
+        // Retour arrière depuis la page suivante : le bouton revient actif.
+        window.addEventListener('pageshow', function () {
+          bouton.disabled = false;
+          bouton.textContent = t.bouton;
+        });
       }
 
       var morceaux = t.aide.split('{adresse}');
