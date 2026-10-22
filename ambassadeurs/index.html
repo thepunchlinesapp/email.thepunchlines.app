@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#F7F7F2">
+  <title>Démarrer · Ambassadeurs Punchlines</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Madimi+One&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F7F2;
+      --carte: #FFFFFF;
+      --bord: #E5E0D8;
+      --texte: #323232;
+      --texte-2: #666666;
+      --texte-3: #999999;
+      --lien: #4F8792;
+      --fait: #4F8792;
+      --fait-fond: #EAF2F3;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--texte);
+      font-size: 16px;
+      line-height: 1.6;
+      padding: 32px 16px 80px;
+    }
+    main { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+    header { display: flex; flex-direction: column; gap: 12px; }
+    .logo { width: 48px; height: 48px; border-radius: 12px; }
+    h1, h2 { font-family: 'Madimi One', Poppins, sans-serif; font-weight: 400; line-height: 1.2; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 20px; }
+    .chapo { color: var(--texte-2); }
+    a { color: var(--lien); }
+
+    /* Barre de progression collée en haut. */
+    .progression {
+      position: sticky; top: 0; z-index: 2;
+      background: var(--bg);
+      padding: 10px 0 12px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .progression-texte { font-size: 14px; color: var(--texte-2); display: flex; justify-content: space-between; }
+    .barre { height: 6px; border-radius: 3px; background: var(--bord); overflow: hidden; }
+    .barre span { display: block; height: 100%; width: 0; background: var(--fait); transition: width .3s ease; }
+
+    .accord { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .accord div { background: var(--carte); border: 1px solid var(--bord); border-radius: 14px; padding: 12px 14px; }
+    .accord strong { display: block; font-weight: 600; font-size: 17px; }
+    .accord span { color: var(--texte-2); font-size: 14px; }
+
+    section { display: flex; flex-direction: column; gap: 10px; }
+    .etapes { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .etape {
+      background: var(--carte); border: 1px solid var(--bord); border-radius: 16px;
+      padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .etape.fait { background: var(--fait-fond); border-color: transparent; }
+    .etape label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-weight: 500; }
+    .etape input { position: absolute; opacity: 0; pointer-events: none; }
+    .case {
+      flex: none; width: 24px; height: 24px; margin-top: 1px; border-radius: 50%;
+      border: 2px solid var(--bord); display: grid; place-items: center; background: var(--carte);
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .case svg { width: 14px; height: 14px; opacity: 0; }
+    .etape.fait .case { background: var(--fait); border-color: var(--fait); }
+    .etape.fait .case svg { opacity: 1; }
+    .etape.fait .titre { color: var(--texte-2); text-decoration: line-through; text-decoration-color: var(--texte-3); }
+    .etape input:focus-visible + .case { outline: 2px solid var(--lien); outline-offset: 2px; }
+    .detail { color: var(--texte-2); font-size: 15px; padding-left: 36px; display: flex; flex-direction: column; gap: 6px; }
+    .detail ul { padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+    .detail code { font-family: ui-monospace, Menlo, monospace; font-size: 14px; background: var(--bg); padding: 1px 6px; border-radius: 6px; color: var(--texte); word-break: break-all; }
+    .attention { color: var(--texte); font-weight: 500; }
+
+    details { padding-left: 36px; }
+    summary { cursor: pointer; color: var(--lien); font-size: 15px; font-weight: 500; }
+    .captures { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+    figure { display: flex; flex-direction: column; gap: 6px; }
+    figure img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--bord); }
+    figcaption { font-size: 14px; color: var(--texte-2); }
+
+    .infos { background: var(--carte); border: 1px solid var(--bord); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px; color: var(--texte-2); font-size: 15px; }
+    .infos strong { color: var(--texte); font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    td { padding: 7px 0; border-bottom: 1px solid var(--bord); }
+    td:last-child { text-align: right; font-weight: 600; color: var(--fait); }
+    tr:last-child td { border-bottom: 0; }
+
+    .bravo { display: none; text-align: center; background: var(--fait-fond); border-radius: 16px; padding: 16px; font-weight: 500; }
+    .bravo.visible { display: block; }
+    footer { color: var(--texte-3); font-size: 14px; text-align: center; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <img class="logo" src="/assets/logo_p.png" alt="Punchlines" width="48" height="48">
+    <h1>Bienvenue dans l'aventure</h1>
+    <p class="chapo">Tout ce qu'il faut pour démarrer, dans l'ordre. Coche chaque étape quand c'est fait : ta progression reste enregistrée sur ce téléphone.</p>
+  </header>
+
+  <div class="progression" aria-live="polite">
+    <div class="progression-texte"><span id="compte">0 étape sur 7</span><span id="pourcent">0 %</span></div>
+    <div class="barre"><span id="barre"></span></div>
+  </div>
+
+  <section>
+    <h2>Notre accord</h2>
+    <div class="accord">
+      <div><strong>2 posts par jour</strong><span>sur un compte TikTok dédié</span></div>
+      <div><strong>100 € par semaine</strong><span>versés en début de semaine</span></div>
+      <div><strong>Des bonus</strong><span>selon les vues de tes vidéos</span></div>
+      <div><strong>Frais ComeUp</strong><span>à notre charge</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tes étapes</h2>
+    <ol class="etapes">
+      <li class="etape" data-id="tiktok">
+        <label><input type="checkbox"><span class="case"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="titre">Créer ton compte TikTok</span></label>
+        <div class="detail">
+          <ul>
+            <li>Dans TikTok : <strong>Profil</strong>, appuie sur ton nom en haut, <strong>Ajouter un compte</strong>, puis le petit lien <strong>Créer un compte</strong> en bas.</li>
+            <li>Ajoute ta date de naissance.</li>
+            <li>Inscris-toi par <strong>email</strong> avec l'adresse que je t'ai envoyée sur WhatsApp, du type <code>prenom.tiktok@thepunchlines.app</code>.</li>
+            <li>Le code de vérification arrive dans ta boîte mail habituelle.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="etape" data-id="profil">
+        <label><input type="checkbox"><span class="case"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="titre">Remplir ton profil</span></label>
+        <div class="detail">
+          <p>Nom d'utilisateur, par exemple <code>prenom.punchlines</code> ou <code>prenomlovespunchlines</code>. Une photo de toi, ton prénom ou un pseudo. Une bio qui parle de Punchlines, par exemple « J'utilise l'app Punchlines pour voir la vie en rose ».</p>
+          <p class="attention">Ne poste rien pendant 3 jours.</p>
+        </div>
+      </li>
+
+      <li class="etape" data-id="jour1">
+        <label><input type="checkbox"><span class="case"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="titre">Préparer ton compte : jour 1</span></label>
+        <div class="detail"><p>Suis au moins 20 comptes sur le bien-être, les affirmations, la pensée positive. Pendant 10 minutes, like, commente et enregistre une dizaine de vidéos sur ces thèmes. C'est ce qui apprend à TikTok à qui montrer tes vidéos.</p></div>
+      </li>
+
+      <li class="etape" data-id="jour2">
+        <label><input type="checkbox"><span class="case"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="titre">Préparer ton compte : jour 2</span></label>
+        <div class="detail"><p>Encore 10 minutes : like, commente et enregistre une dizaine de vidéos sur ces thèmes.</p></div>
+      </li>
+
+      <li class="etape" data-id="jour3">
+        <label><input type="checkbox"><span class="case"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="titre">Préparer ton compte : jour 3</span></label>
+        <div class="detail"><p>Dernier jour de préparation. Demain, tu peux poster.</p></div>
+      </li>
+
+      <li class="etape" data-id="comeup">
+        <label><input type="checkbox"><span class="case"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="titre">Créer ton compte ComeUp</span></label>
+        <div class="detail">
+          <p>C'est là que tu recevras tes paiements. Fais-le pendant tes 3 jours de préparation, sur <a href="https://comeup.com/fr/become-seller" target="_blank" rel="noopener">comeup.com/fr/become-seller</a>. Tu as une auto-entreprise ? Tu peux sauter cette étape et me facturer directement.</p>
+        </div>
+        <details>
+          <summary>Voir les écrans pas à pas</summary>
+          <div class="captures">
+            <figure><img src="img/01-email.jpg" alt="Écran Bienvenue de ComeUp" loading="lazy"><figcaption>1. Ton adresse email, puis « Continuer avec mon adresse e-mail ».</figcaption></figure>
+            <figure><img src="img/02-code.jpg" alt="Saisie du code de confirmation" loading="lazy"><figcaption>2. Le code reçu par email, les conditions, la case « humain », puis « Créer mon compte ».</figcaption></figure>
+            <figure><img src="img/03-nom-utilisateur.jpg" alt="Choix du nom d'utilisateur" loading="lazy"><figcaption>3. Ton nom d'utilisateur.</figcaption></figure>
+            <figure><img src="img/04-titre.jpg" alt="Titre du profil" loading="lazy"><figcaption>4. Une photo et un titre, par exemple « Ambassadeur pour App mobile ».</figcaption></figure>
+            <figure><img src="img/05-description.jpg" alt="Description du profil" loading="lazy"><figcaption>5. Une description, par exemple « Je crée des posts sur TikTok pour des applications mobiles ».</figcaption></figure>
+            <figure><img src="img/06-compte-vendeur.jpg" alt="Mon compte vendeur" loading="lazy"><figcaption>6. Dans « Mon compte vendeur », « Faire valider mes coordonnées » : clique sur « Modifier ».</figcaption></figure>
+            <figure><img src="img/07-coordonnees.jpg" alt="Mes coordonnées" loading="lazy"><figcaption>7. Statut <strong>Particulier</strong>, puis ton nom et ton adresse.</figcaption></figure>
+            <figure><img src="img/08-numero-fiscal.jpg" alt="Numéro fiscal et devise" loading="lazy"><figcaption>8. Ta naissance, ton numéro fiscal (le lien « Comment le trouver ? » t'aide), la devise Euro, puis « Enregistrer et continuer ».</figcaption></figure>
+          </div>
+        </details>
+      </li>
+
+      <li class="etape" data-id="post1">
+        <label><input type="checkbox"><span class="case"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="titre">Publier ta première vidéo</span></label>
+        <div class="detail"><p>Chaque vidéo montre Punchlines, peu importe la façon. Je t'envoie des exemples et des accroches qui marchent. Envoie-moi le lien de ta première vidéo sur WhatsApp : je déclenche ton premier paiement.</p></div>
+      </li>
+    </ol>
+    <p class="bravo" id="bravo">Tout est prêt, bravo ! Rendez-vous à 2 vidéos par jour.</p>
+  </section>
+
+  <section>
+    <h2>Tes paiements</h2>
+    <div class="infos">
+      <p>Ton <strong>premier paiement</strong> part dès ta première vidéo. Ensuite, <strong>100 € au début de chaque semaine</strong>, sur ComeUp. Les frais de la plateforme sont à notre charge.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tes bonus</h2>
+    <div class="infos">
+      <p>Chaque vidéo qui atteint un palier te rapporte un bonus. Les vues sont relevées <strong>7 jours après la publication</strong>, puis figées. On fait le compte à la fin du mois.</p>
+      <table>
+        <tr><td>10 000 vues</td><td>10 €</td></tr>
+        <tr><td>25 000 vues</td><td>20 €</td></tr>
+        <tr><td>50 000 vues</td><td>35 €</td></tr>
+        <tr><td>100 000 vues</td><td>60 €</td></tr>
+        <tr><td>250 000 vues</td><td>120 €</td></tr>
+        <tr><td>500 000 vues</td><td>200 €</td></tr>
+      </table>
+      <p>Exemple : 4 vidéos à 100 000 vues dans le mois, c'est 4 × 60 € = <strong>240 € en plus</strong>.</p>
+    </div>
+  </section>
+
+  <footer>Une question ? Écris-moi sur WhatsApp. Harry, fondateur de Punchlines.</footer>
+</main>
+
+<script>
+  (function () {
+    var CLE = 'punchlines-ambassadeur-etapes';
+    var etapes = Array.prototype.slice.call(document.querySelectorAll('.etape'));
+    var faits = {};
+    try { faits = JSON.parse(localStorage.getItem(CLE) || '{}') || {}; } catch (e) { faits = {}; }
+
+    function rafraichir() {
+      var n = 0;
+      etapes.forEach(function (li) {
+        var fait = !!faits[li.dataset.id];
+        li.classList.toggle('fait', fait);
+        li.querySelector('input').checked = fait;
+        if (fait) n++;
+      });
+      var total = etapes.length;
+      var pct = Math.round((n / total) * 100);
+      document.getElementById('compte').textContent = n + (n > 1 ? ' étapes' : ' étape') + ' sur ' + total;
+      document.getElementById('pourcent').textContent = pct + ' %';
+      document.getElementById('barre').style.width = pct + '%';
+      document.getElementById('bravo').classList.toggle('visible', n === total);
+    }
+
+    etapes.forEach(function (li) {
+      li.querySelector('input').addEventListener('change', function (e) {
+        faits[li.dataset.id] = e.target.checked;
+        try { localStorage.setItem(CLE, JSON.stringify(faits)); } catch (err) {}
+        rafraichir();
+      });
+    });
+    rafraichir();
+  })();
+</script>
+</body>
+</html>
